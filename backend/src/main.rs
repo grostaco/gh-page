@@ -1,9 +1,14 @@
-use rocket::{self, launch};
+use rocket::{self, fs::FileServer, launch, routes};
+use routes::spotify::get_tracks;
+use spotify::Spotify;
 
 mod routes;
-use routes::spotify::Spotify;
 
 #[launch]
-fn rocket() -> _ {
+async fn rocket() -> _ {
+    let spotify = Spotify::new("spotify.json").await.unwrap();
     rocket::build()
+        .mount("/", FileServer::from("backend/static/"))
+        .mount("/api/spotify", routes![get_tracks])
+        .manage(spotify)
 }
