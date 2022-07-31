@@ -1,1 +1,1 @@
-mod spotify;
+pub mod spotify;
