@@ -109,12 +109,12 @@ name = "backend"
 version = "0.1.0"
 dependencies = [
  "base64",
- "chrono",
  "log",
  "reqwest",
  "rocket",
  "serde",
  "serde_json",
+ "spotify",
  "thiserror",
 ]
 
@@ -484,12 +484,14 @@ dependencies = [
 name = "gh-page"
 version = "0.1.0"
 dependencies = [
+ "js-sys",
  "log",
  "reqwest",
  "serde",
  "serde_json",
+ "spotify",
  "thiserror",
- "tokio",
+ "wasm-bindgen-futures",
  "wasm-logger",
  "yew",
  "yew-hooks",
@@ -1315,6 +1317,7 @@ dependencies = [
  "rocket_codegen",
  "rocket_http",
  "serde",
+ "serde_json",
  "state",
  "tempfile",
  "time 0.3.11",
@@ -1534,6 +1537,18 @@ name = "spin"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f6002a767bff9e83f8eeecf883ecb8011875a21ae8da43bffb817a57e78cc09"
+
+[[package]]
+name = "spotify"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "chrono",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
 
 [[package]]
 name = "stable-pattern"

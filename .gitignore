@@ -1,2 +1,4 @@
 /target
+dist/
+static/
 spotify.json
