@@ -1,6 +1,4 @@
 [build]
 dist = "../backend/static"
-public_url = "/"
 
 [serve]
-port = 8000
