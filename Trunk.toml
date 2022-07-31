@@ -1,3 +1,0 @@
-[build]
-dist = "docs"
-public_url = "/gh-page/"

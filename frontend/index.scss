@@ -1,0 +1,75 @@
+html,
+body {
+    position: relative;
+    min-height: 100%;
+    color: #9eaab7;
+    background-color: #0f1117;
+    margin: 0;
+}
+
+.navbar {
+    display: flex;
+    padding: 0.75rem;
+    justify-content: space-between;
+}
+
+.main {
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 1.5rem;
+}
+
+@media screen and (min-width: 48em) {
+    .main-content {
+        margin: 5% auto;
+    }
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+}
+
+.about {
+    display: grid;
+    grid-template-areas: "bio avatar";
+    gap: 2rem;
+}
+
+.bio {
+    display: flex;
+    flex-direction: column;
+    grid-area: bio;
+    flex: 1;
+    font-family: 'Wotfard', -apple-system, 'Segoe UI', 'Roboto', 'Ubuntu', 'Cantarell', 'Noto Sans', sans-serif, 'BlinkMacSystemFont', 'Helvetica Neue', 'Arial', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    max-width: 42rem;
+}
+
+.bio .name {
+    display: block;
+    font-size: 4.5rem;
+    color: #eee;
+}
+
+.bio .content {
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.about .avatar-area {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.content {
+    width: 100%;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-areas: "blog blog spotify";
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: row;
+}
