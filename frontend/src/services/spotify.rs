@@ -1,5 +1,3 @@
-use log::info;
-use serde_json::json;
 use spotify::Tracks;
 
 use crate::error::Error;

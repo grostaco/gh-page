@@ -4,10 +4,10 @@ pub mod types;
 use std::{
     fs::{read_to_string, OpenOptions},
     path::{Path, PathBuf},
-    sync::{Arc, Mutex},
 };
 
 use reqwest::{Client, StatusCode};
+use serde::{de::DeserializeOwned, Serialize};
 use serde_json::json;
 
 use self::{
@@ -25,6 +25,7 @@ macro_rules! spotify_url {
 }
 
 const EXPIRE_TIME: u64 = 3600;
+const INTERVAL_REFRESH: u64 = 300;
 
 macro_rules! handle_res_error {
     ($status:expr, $body:expr) => {
@@ -45,7 +46,7 @@ macro_rules! handle_res_error {
 }
 
 pub struct Spotify {
-    inner: Arc<Mutex<Inner>>,
+    inner: Inner,
     path: PathBuf,
     client: Client,
 }
@@ -53,8 +54,8 @@ pub struct Spotify {
 impl Spotify {
     pub async fn new<P: AsRef<Path> + Into<PathBuf>>(path: P) -> Result<Self, SpotifyError> {
         let inner: Inner = serde_json::from_str(&read_to_string(&path).unwrap()).unwrap();
-        let spotify = Self {
-            inner: Arc::new(Mutex::new(inner)),
+        let mut spotify = Self {
+            inner,
             path: path.into(),
             client: Client::new(),
         };
@@ -64,10 +65,40 @@ impl Spotify {
         Ok(spotify)
     }
 
-    pub async fn update_file(&mut self) {}
+    pub fn update_file(&mut self) {
+        serde_json::to_writer_pretty(
+            OpenOptions::new()
+                .write(true)
+                .truncate(true)
+                .open(&self.path)
+                .unwrap(),
+            &self.inner,
+        )
+        .unwrap();
+    }
 
-    pub async fn refresh_token(&self) -> Result<(), SpotifyError> {
-        let mut inner = self.inner.lock().unwrap();
+    pub fn update_cache<T: Serialize>(&mut self, src: &str, response: T, update_file: bool) {
+        self.inner.cached_responses.insert(
+            src.to_string(),
+            (
+                chrono::Utc::now().timestamp() as u64,
+                serde_json::to_value(response).unwrap(),
+            ),
+        );
+        if update_file {
+            self.update_file()
+        }
+    }
+
+    pub fn get_cache<'de, T: DeserializeOwned>(&mut self, src: &str) -> Option<(bool, T)> {
+        let (ts, val) = self.inner.cached_responses.get(src)?;
+        let needs_refresh = chrono::Utc::now().timestamp() as u64 - *ts > INTERVAL_REFRESH;
+        let val: T = serde_json::from_value(val.clone()).ok()?;
+        Some((needs_refresh, val))
+    }
+
+    pub async fn refresh_token(&mut self) -> Result<(), SpotifyError> {
+        let mut inner = &mut self.inner;
         let ts = chrono::Utc::now().timestamp() as u64;
         if ts - EXPIRE_TIME < inner.last_requested {
             return Ok(());
@@ -94,29 +125,24 @@ impl Spotify {
         inner.access_token = cred.access_token;
         inner.last_requested = ts;
 
-        serde_json::to_writer_pretty(
-            OpenOptions::new()
-                .write(true)
-                .truncate(true)
-                .open(&self.path)
-                .unwrap(),
-            &*inner,
-        )
-        .unwrap();
+        self.update_file();
 
         Ok(())
     }
 
-    pub async fn tracks(&self) -> Result<Tracks, SpotifyError> {
-        self.refresh_token().await?;
+    pub async fn tracks(&mut self) -> Result<Tracks, SpotifyError> {
+        self.refresh_token().await.unwrap();
+        if let Some((refresh, tracks)) = self.get_cache::<Tracks>("tracks") {
+            if !refresh {
+                return Ok(tracks);
+            }
+        }
 
+        let inner = &self.inner;
         let response = self
             .client
             .get(spotify_url!("/me/tracks"))
-            .header(
-                "Authorization",
-                format!("Bearer {}", self.inner.lock().unwrap().access_token),
-            )
+            .header("Authorization", format!("Bearer {}", inner.access_token))
             .header("Content-Type", "application/json")
             .send()
             .await?;
@@ -124,6 +150,7 @@ impl Spotify {
         let content = response.text().await?;
 
         let result: Tracks = handle_res_error!(status, &content)?;
+        self.update_cache("tracks", &result, true);
 
         Ok(result)
     }
@@ -136,7 +163,7 @@ impl Spotify {
 //     #[rocket::async_test]
 //     async fn test() {
 //         println!("{:#?}", std::env::current_dir());
-//         let spotify = Spotify::new("../spotify.json").await.unwrap();
+//         let mut spotify = Spotify::new("../spotify.json").await.unwrap();
 
 //         println!("{:#?}", spotify.tracks().await);
 //     }
