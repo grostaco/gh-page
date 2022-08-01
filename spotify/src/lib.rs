@@ -4,6 +4,7 @@ pub mod types;
 use std::{
     fs::{read_to_string, OpenOptions},
     path::{Path, PathBuf},
+    sync::{Arc, Mutex},
 };
 
 use reqwest::{Client, StatusCode};
@@ -44,7 +45,7 @@ macro_rules! handle_res_error {
 }
 
 pub struct Spotify {
-    inner: Inner,
+    inner: Arc<Mutex<Inner>>,
     path: PathBuf,
     client: Client,
 }
@@ -52,8 +53,8 @@ pub struct Spotify {
 impl Spotify {
     pub async fn new<P: AsRef<Path> + Into<PathBuf>>(path: P) -> Result<Self, SpotifyError> {
         let inner: Inner = serde_json::from_str(&read_to_string(&path).unwrap()).unwrap();
-        let mut spotify = Self {
-            inner,
+        let spotify = Self {
+            inner: Arc::new(Mutex::new(inner)),
             path: path.into(),
             client: Client::new(),
         };
@@ -63,14 +64,16 @@ impl Spotify {
         Ok(spotify)
     }
 
-    pub async fn refresh_token(&mut self) -> Result<(), SpotifyError> {
+    pub async fn update_file(&mut self) {}
+
+    pub async fn refresh_token(&self) -> Result<(), SpotifyError> {
+        let mut inner = self.inner.lock().unwrap();
         let ts = chrono::Utc::now().timestamp() as u64;
-        if ts - EXPIRE_TIME < self.inner.last_requested {
+        if ts - EXPIRE_TIME < inner.last_requested {
             return Ok(());
         }
 
-        let params =
-            json!({"grant_type": "refresh_token", "refresh_token": self.inner.refresh_token});
+        let params = json!({"grant_type": "refresh_token", "refresh_token": inner.refresh_token});
         let response = self
             .client
             .post("https://accounts.spotify.com/api/token")
@@ -78,10 +81,7 @@ impl Spotify {
                 "Authorization",
                 format!(
                     "Basic {}",
-                    base64::encode(format!(
-                        "{}:{}",
-                        self.inner.client_id, self.inner.client_secret
-                    ))
+                    base64::encode(format!("{}:{}", inner.client_id, inner.client_secret))
                 ),
             )
             .form(&params)
@@ -91,8 +91,8 @@ impl Spotify {
         let content = response.text().await?;
 
         let cred: Credentials = handle_res_error!(status, &content)?;
-        self.inner.access_token = cred.access_token;
-        self.inner.last_requested = ts;
+        inner.access_token = cred.access_token;
+        inner.last_requested = ts;
 
         serde_json::to_writer_pretty(
             OpenOptions::new()
@@ -100,7 +100,7 @@ impl Spotify {
                 .truncate(true)
                 .open(&self.path)
                 .unwrap(),
-            &self.inner,
+            &*inner,
         )
         .unwrap();
 
@@ -108,12 +108,14 @@ impl Spotify {
     }
 
     pub async fn tracks(&self) -> Result<Tracks, SpotifyError> {
+        self.refresh_token().await?;
+
         let response = self
             .client
             .get(spotify_url!("/me/tracks"))
             .header(
                 "Authorization",
-                format!("Bearer {}", self.inner.access_token),
+                format!("Bearer {}", self.inner.lock().unwrap().access_token),
             )
             .header("Content-Type", "application/json")
             .send()

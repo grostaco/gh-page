@@ -108,6 +108,7 @@ pub struct Inner {
     pub access_token: String,
     pub refresh_token: String,
     pub last_requested: u64,
+    pub cached_responses: Option<Value>,
 }
 
 #[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
@@ -116,4 +117,13 @@ pub struct TrackResponse {
     added_at: u64,
     icon: String,
     artist: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct CachedResponse<T>
+where
+    T: Serialize,
+{
+    response: T,
+    time: u64,
 }
