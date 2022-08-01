@@ -17,7 +17,10 @@ body {
 }
 
 a {
+    background-color: transparent;
+    color: inherit;
     word-break: inherit;
+    text-decoration: inherit;
 }
 
 a:visited {
@@ -225,6 +228,14 @@ p {
     color: #eee;
 }
 
+.header-text {
+    color: #9eaab7;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+}
+
 .spotify-header>.text {
     color: #9eaab7;
     font-size: 14px;
@@ -341,6 +352,41 @@ p {
 
 .track-about>.artist {
     color: #9eaab7;
+}
+
+.blog-header {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.code {
+    font-size: 13px;
+    margin-right: 0.5rem;
+}
+
+.flex-row {
+    display: flex;
+    flex-flow: row;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.max-width {
+    width: 100%;
 }
 
 // .song-container {
