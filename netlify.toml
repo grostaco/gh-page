@@ -2,6 +2,7 @@
 base = "/"
 
 [dev]
+command = "cargo run -p backend --release"
 targetPort = 8000
 
 [[headers]]
