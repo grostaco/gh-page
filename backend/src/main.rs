@@ -1,4 +1,4 @@
-use rocket::{self, fs::FileServer, launch, routes, tokio::sync::Mutex, Config};
+use rocket::{self, figment::Figment, fs::FileServer, launch, routes, tokio::sync::Mutex, Config};
 use routes::spotify::get_tracks;
 use spotify::{types::Inner, Spotify};
 
@@ -13,8 +13,12 @@ async fn rocket() -> _ {
         }
         Err(_) => Spotify::new("spotify.json").await.unwrap(),
     };
+    let port: u64 = std::env::var("PORT")
+        .map(|p| p.parse().unwrap())
+        .unwrap_or(8080);
 
-    rocket::build()
+    let figment = Figment::new().merge(("port", port));
+    rocket::custom(figment)
         .mount("/", FileServer::from("backend/static/"))
         .mount("/api/spotify", routes![get_tracks])
         .manage(Mutex::new(spotify))
