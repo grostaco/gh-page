@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use log::info;
-use yew::{function_component, html, use_effect_with_deps, virtual_dom::VNode, Html};
+use yew::{function_component, html, use_effect_with_deps, virtual_dom::VNode};
 use yew_hooks::use_async;
 
 use spotify::chrono::DateTime;

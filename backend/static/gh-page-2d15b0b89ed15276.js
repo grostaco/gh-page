@@ -690,7 +690,7 @@ function initSync(bytes) {
 
 async function init(input) {
     if (typeof input === 'undefined') {
-        input = new URL('gh-page-c7f99511e707896d_bg.wasm', import.meta.url);
+        input = new URL('gh-page-2d15b0b89ed15276_bg.wasm', import.meta.url);
     }
     const imports = getImports();
 
