@@ -1,1 +1,1 @@
-web:ROCKET_PORT=$PORT ROCKET_ENV=prod ./target/release/backend
+web:ROCKET_ENV=prod ./target/release/backend

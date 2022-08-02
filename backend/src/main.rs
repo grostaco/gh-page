@@ -17,7 +17,9 @@ async fn rocket() -> _ {
         .map(|p| p.parse().unwrap())
         .unwrap_or(8080);
 
-    let figment = Figment::new().merge(("port", port));
+    let figment = Config::figment()
+        .merge(("port", port))
+        .merge(("address", "0.0.0.0"));
     rocket::custom(figment)
         .mount("/", FileServer::from("backend/static/"))
         .mount("/api/spotify", routes![get_tracks])
