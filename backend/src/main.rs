@@ -13,14 +13,7 @@ async fn rocket() -> _ {
         }
         Err(_) => Spotify::new("spotify.json").await.unwrap(),
     };
-    let port: u64 = std::env::var("PORT")
-        .map(|p| p.parse().unwrap())
-        .unwrap_or(8080);
-
-    let figment = Config::figment()
-        .merge(("port", port))
-        .merge(("address", "0.0.0.0"));
-    rocket::custom(figment)
+    rocket::build()
         .mount("/", FileServer::from("backend/static/"))
         .mount("/api/spotify", routes![get_tracks])
         .manage(Mutex::new(spotify))
