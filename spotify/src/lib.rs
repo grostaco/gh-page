@@ -80,6 +80,7 @@ impl Spotify {
     pub fn update_file(&mut self) {
         serde_json::to_writer_pretty(
             OpenOptions::new()
+                .create(true)
                 .write(true)
                 .truncate(true)
                 .open(&self.path)
