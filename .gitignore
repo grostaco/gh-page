@@ -1,6 +1,5 @@
 /target
 dist/
-static/
 spotify.json
 # Local Netlify folder
 .netlify

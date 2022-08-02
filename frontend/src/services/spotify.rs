@@ -3,7 +3,7 @@ use spotify::Tracks;
 use crate::error::Error;
 
 pub async fn get_tracks() -> Result<Tracks, Error> {
-    let res = reqwest::get("https://grostaco.netlify.app/api/spotify/tracks")
+    let res = reqwest::get("https://grostaco-1f57c2.netlify.live/api/spotify/tracks")
         .await
         .map_err(|_| Error::ReqestError)?;
     let tracks: Tracks =
