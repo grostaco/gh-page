@@ -1,4 +1,4 @@
-use rocket::{self, figment::Figment, fs::FileServer, launch, routes, tokio::sync::Mutex, Config};
+use rocket::{self, fs::FileServer, launch, routes, tokio::sync::Mutex};
 use routes::spotify::get_tracks;
 use spotify::{types::Inner, Spotify};
 
