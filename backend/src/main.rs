@@ -8,7 +8,6 @@ mod routes;
 async fn rocket() -> _ {
     let spotify = match std::env::var("SPOTIFY") {
         Ok(val) => {
-            println!("\n\n\n{}\n\n\n", val);
             let inner: Inner = serde_json::from_str(&val).unwrap();
             Spotify::from_inner(inner, "spotify.json").await.unwrap()
         }
