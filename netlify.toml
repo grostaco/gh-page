@@ -1,0 +1,11 @@
+[build]
+base = "/"
+
+[dev]
+command = "./dist/backend.exe"
+targetPort = 8000
+
+[[headers]]
+  for = "/api/"
+    [headers.values]
+    Access-Control-Allow-Origin = "http://localhost"
