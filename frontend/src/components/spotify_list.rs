@@ -12,15 +12,6 @@ use crate::services::spotify::get_tracks;
 pub fn spotify_list() -> Html {
     info!("Fetching list");
 
-    // spawn_local(async move {
-    //     reqwest::Client::new()
-    //         .get("http://127.0.0.1:8080/api/spotify/tracks")
-    //         .header("Content-Type", "application/json")
-    //         .send()
-    //         .await
-    //         .unwrap();
-    // });
-
     let state = use_async(async move { get_tracks().await });
     {
         info!(

@@ -1,12 +1,20 @@
-use rocket::{self, fs::FileServer, launch, routes, tokio::sync::Mutex};
+use rocket::{self, fs::FileServer, launch, routes, tokio::sync::Mutex, Config};
 use routes::spotify::get_tracks;
-use spotify::Spotify;
+use spotify::{types::Inner, Spotify};
 
 mod routes;
 
 #[launch]
 async fn rocket() -> _ {
-    let spotify = Spotify::new("spotify.json").await.unwrap();
+    let spotify = match std::env::var("SPOTIFY") {
+        Ok(val) => {
+            println!("\n\n\n{}\n\n\n", val);
+            let inner: Inner = serde_json::from_str(&val).unwrap();
+            Spotify::from_inner(inner, "spotify.json").await.unwrap()
+        }
+        Err(_) => Spotify::new("spotify.json").await.unwrap(),
+    };
+
     rocket::build()
         .mount("/", FileServer::from("backend/static/"))
         .mount("/api/spotify", routes![get_tracks])

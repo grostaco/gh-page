@@ -65,6 +65,18 @@ impl Spotify {
         Ok(spotify)
     }
 
+    pub async fn from_inner<P: Into<PathBuf>>(inner: Inner, path: P) -> Result<Self, SpotifyError> {
+        let mut spotify = Self {
+            inner,
+            path: path.into(),
+            client: Client::new(),
+        };
+
+        spotify.refresh_token().await?;
+
+        Ok(spotify)
+    }
+
     pub fn update_file(&mut self) {
         serde_json::to_writer_pretty(
             OpenOptions::new()
