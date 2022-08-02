@@ -2,7 +2,6 @@
 base = "/"
 
 [dev]
-command = "./dist/backend.exe"
 targetPort = 8000
 
 [[headers]]
