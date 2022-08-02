@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-use log::info;
 use yew::{function_component, html, use_effect_with_deps, virtual_dom::VNode};
 use yew_hooks::use_async;
 
@@ -10,14 +9,8 @@ use crate::services::spotify::get_tracks;
 
 #[function_component(SpotifyList)]
 pub fn spotify_list() -> Html {
-    info!("Fetching list");
-
     let state = use_async(async move { get_tracks().await });
     {
-        info!(
-            "Not very successful :( Current state data {:#?}",
-            state.data
-        );
         let state = state.clone();
         let data = state.data.clone();
         use_effect_with_deps(
