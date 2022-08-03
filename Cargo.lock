@@ -114,7 +114,7 @@ dependencies = [
  "rocket",
  "serde",
  "serde_json",
- "spotify",
+ "services",
  "thiserror",
 ]
 
@@ -489,7 +489,7 @@ dependencies = [
  "reqwest",
  "serde",
  "serde_json",
- "spotify",
+ "services",
  "thiserror",
  "wasm-bindgen-futures",
  "wasm-logger",
@@ -1479,6 +1479,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "services"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "chrono",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
 name = "sha2"
 version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1537,18 +1549,6 @@ name = "spin"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f6002a767bff9e83f8eeecf883ecb8011875a21ae8da43bffb817a57e78cc09"
-
-[[package]]
-name = "spotify"
-version = "0.1.0"
-dependencies = [
- "base64",
- "chrono",
- "reqwest",
- "serde",
- "serde_json",
- "thiserror",
-]
 
 [[package]]
 name = "stable-pattern"

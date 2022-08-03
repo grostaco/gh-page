@@ -1,7 +1,7 @@
 use rocket::{get, serde::json::Json, tokio::sync::Mutex, State};
-use spotify::{types::Tracks, Spotify};
+use services::spotify::{types::Tracks, Spotify};
 
-#[get("/tracks")]
+#[get("/spotify/tracks")]
 pub async fn get_tracks(spotify: &State<Mutex<Spotify>>) -> Json<Tracks> {
     let mut spotify = spotify.lock().await;
     spotify.refresh_token().await.unwrap();

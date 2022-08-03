@@ -213,6 +213,10 @@ p {
     flex: 1;
 }
 
+.blog-container>*~* {
+    margin-top: 1.5rem;
+}
+
 .spotify-container {
     display: flex;
     flex-flow: column;
@@ -387,6 +391,39 @@ p {
 
 .max-width {
     width: 100%;
+}
+
+.title-text {
+    font-weight: 600;
+    font-size: 22px;
+    display: inline;
+}
+
+.game-title {
+    font-size: 18px;
+    color: #eee;
+}
+
+.game-time {
+    font-size: 16px;
+}
+
+.game-description-content {
+    max-height: 100px;
+    overflow: hidden;
+    font-size: 14px;
+    line-height: 18px;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+}
+
+.game-list {
+    margin-top: 1.5rem;
+}
+
+.game-list>*~* {
+    margin-top: 2.55rem;
 }
 
 // .song-container {

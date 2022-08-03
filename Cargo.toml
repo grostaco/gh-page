@@ -2,4 +2,4 @@
 lto = true
 
 [workspace]
-members = ["frontend", "backend", "spotify"]
+members = ["frontend", "backend"]

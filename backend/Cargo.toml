@@ -13,4 +13,4 @@ serde_json = "1.0.82"
 thiserror = "1.0.31"
 base64 = "0.13.0"
 rocket = { version = "0.5.0-rc.2", features = ["json"] }
-spotify = { path = "../spotify" }
+services = { path = "services" }

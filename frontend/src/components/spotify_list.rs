@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use yew::{function_component, html, use_effect_with_deps, virtual_dom::VNode};
 use yew_hooks::use_async;
 
-use spotify::chrono::DateTime;
+use services::spotify::chrono::DateTime;
 
 use crate::services::spotify::get_tracks;
 
