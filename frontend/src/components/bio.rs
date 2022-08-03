@@ -57,7 +57,7 @@ pub fn bio() -> Html {
             <div class="avatar-area">
                 <div role="group" class="avatar">
                     <div class="avatar-container">
-                        <img src="https://cdn.discordapp.com/attachments/936974443559936032/1003266978045247529/gary-padoru_2.png" layout="fixed" width="300" height="300" data-main-image="" sizes="300px" decoding="async" />
+                        <img alt="profile" src="https://cdn.discordapp.com/attachments/936974443559936032/1003266978045247529/gary-padoru_2.png" layout="fixed" width="300" height="300" data-main-image="" sizes="300px" decoding="async" />
 
                     </div>
                     <p class="credit">
