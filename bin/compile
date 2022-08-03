@@ -2,6 +2,7 @@
 
 # Taken from https://github.com/emk/heroku-buildpack-rust/blob/master/bin/compile
 # Modified to support Trunk
+
 # Find all the directories we might need (based on
 # heroku-buildpack-nodejs code).
 BUILD_DIR=${1:-}
