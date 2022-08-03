@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Taken from https://github.com/emk/heroku-buildpack-rust/blob/master/bin/detect
+
+if [ -f "$1/RustConfig" ] || [ -f "$1/rust-toolchain" ] || [ -f "$1/Cargo.toml" ]; then
+    echo "Rust"
+    exit 0
+else
+    exit 1
+fi
