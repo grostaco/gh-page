@@ -21,7 +21,7 @@ async fn rocket() -> _ {
     let steam = services::steam::Client::new(env::var("STEAM").unwrap());
     let steam_id: u64 = env::var("STEAM_ID").unwrap().parse().unwrap();
     rocket::build()
-        .mount("/", FileServer::from("static/"))
+        .mount("/", FileServer::from("target/release/static/"))
         .mount(
             "/api/",
             routes![get_tracks, get_owned, get_recent, get_info],

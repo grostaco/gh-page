@@ -1,4 +1,4 @@
 [build]
-dist = "../backend/static"
+dist = "../target/release/static"
 
 [serve]
