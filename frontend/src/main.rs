@@ -16,6 +16,7 @@ impl Component for App {
         Self
     }
 
+    // TODO: clean this up
     fn view(&self, _ctx: &yew::Context<Self>) -> yew::Html {
         html! {
             <div>

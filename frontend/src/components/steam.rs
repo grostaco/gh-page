@@ -1,4 +1,3 @@
-use log::info;
 use yew::{function_component, html, use_effect_with_deps};
 use yew_hooks::use_async;
 
@@ -70,7 +69,7 @@ pub fn game_list() -> Html {
                             if let Some(data) = &state.data {
                                 { for data.iter().take(5).map(|(gameinfo, game)| {
                                     html! { <div class="flex-row justify-between" style="gap: 20px;">
-                                            <img src={gameinfo.header_image.clone()} style="width: 320px;"/>
+                                            <img alt="header image" src={gameinfo.header_image.clone()} style="width: 320px;"/>
                                             <div class="flex-column">
                                                 <span style="margin-bottom: 5px;">
                                                 <p class="header-text game-title">{game.name.clone()}</p>
