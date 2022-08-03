@@ -24,25 +24,40 @@ pub fn game_list() -> Html {
         }
         .await
     });
+
+    let owned_games = use_async(async move { get_owned_games().await });
+
     {
         let state = state.clone();
         let data = state.data.clone();
 
         use_effect_with_deps(
-            move |data| {
-                info!("I got run!");
+            move |_| {
                 state.run();
                 || ()
             },
             data.clone(),
         );
+
+        let owned_games = owned_games.clone();
+        let data = owned_games.data.is_some();
+        use_effect_with_deps(
+            move |_| {
+                owned_games.run();
+                || ()
+            },
+            data,
+        )
     }
 
     html! {
         <div class="blog-container">
             <div class="blog-header">
                 <div>
-                    <p class="header-text">{"My steam games (43)"}</p>
+                    <p class="header-text">{format!("My steam games ({})", match &owned_games.data {
+                        Some(games) => games.game_count,
+                        None => 0,
+                    })}</p>
                 </div>
                 <div class="flex-row align-center">
                     <a href="https://github.com/grostaco/gh-page" class="code">{"View this site's code"}</a>
