@@ -1,5 +1,6 @@
 [profile.release]
 lto = true
+opt-level = "z"
 
 [workspace]
 members = ["frontend", "backend"]
