@@ -426,6 +426,19 @@ p {
     margin-top: 2.55rem;
 }
 
+.game-img-preview {
+    max-width: 64px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.game-owned-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
 // .song-container {
 //     display: flex;
 //     flex-direction: column;
