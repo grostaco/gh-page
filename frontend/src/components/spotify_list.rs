@@ -49,7 +49,7 @@ pub fn spotify_list() -> Html {
                 <a class="track-anchor" href={item.track.external_urls.as_object().unwrap().get("spotify").unwrap().as_str().unwrap().to_string()}>
                     <div class="track-info">
 
-                        <img width="64px" height="64px" alt="Placeholder" src={item.track.album.images.first().unwrap().url.clone()} loading="lazy" class="track-image" fetchpriority="low"/>
+                        <img width="64px" height="64px" alt="Placeholder" src={item.track.album.images.last().unwrap().url.clone()} loading="lazy" class="track-image" fetchpriority="low"/>
                         <div class="track-about">
                             <p class="title">{item.track.album.name.clone()}</p>
                             <p class="artist">{
