@@ -68,7 +68,8 @@ pub fn game_list() -> Html {
                 <div class="game-list flex-column">
                             if let Some(data) = &state.data {
                                 { for data.iter().take(5).map(|(gameinfo, game)| {
-                                    html! { <div class="flex-row justify-between" style="gap: 20px;">
+                                    html! {
+                                        <div class="flex-row justify-between" style="gap: 20px;">
                                             <img alt="header image" src={gameinfo.header_image.clone()} style="width: 320px;"/>
                                             <div class="flex-column">
                                                 <span style="margin-bottom: 5px;">
@@ -83,7 +84,7 @@ pub fn game_list() -> Html {
                                                 </div>
                                             </div>
                                         </div>
-                                }
+                                    }
                                 })}
                             }
                 </div>
@@ -92,11 +93,10 @@ pub fn game_list() -> Html {
                 <p class="title-text" style="color: #eee;">{"Games Owned"}</p>
                 <div class="game-owned-grid">
                     if let Some(owned_games) = &owned_games.data {
-
                         {for owned_games.games.iter().map(|game|
                             html! {
                                 <div class="flex-row align-center" style="gap: 0.5rem; overflow: hidden">
-                                    <img class="game-img-preview" src={format!("http://media.steampowered.com/steamcommunity/public/images/apps/{}/{}.jpg", game.appid, game.img_icon_url)}/>
+                                    <img alt="game icon preview" class="game-img-preview" src={format!("http://media.steampowered.com/steamcommunity/public/images/apps/{}/{}.jpg", game.appid, game.img_icon_url)}/>
                                     <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap">{game.name.clone()}</p>
                                     <div>{"·"}</div>
                                     <p style="white-space: nowrap">{format!("{:.1} hrs", game.playtime_forever as f64 / 60.)}</p>
@@ -109,5 +109,3 @@ pub fn game_list() -> Html {
         </div>
     }
 }
-
-//
