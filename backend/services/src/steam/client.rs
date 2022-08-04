@@ -35,7 +35,6 @@ impl Client {
             .await?;
         let (status, text) = (response.status(), response.text().await?);
 
-        println!("{:#}", text);
         if !status.is_success() {
             return Err(Error::UnexpectedStatus(status.as_u16()));
         }
