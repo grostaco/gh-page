@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+use reqwest::ClientBuilder;
 use serde_json::Value;
 
 use super::{
@@ -13,10 +14,24 @@ pub struct Client {
     api_key: String,
 }
 
+#[cfg(feature = "brotli")]
+#[inline]
+fn enable_brotli(builder: ClientBuilder) -> ClientBuilder {
+    builder.brotli(true).http2_prior_knowledge()
+}
+
+#[cfg(not(feature = "brotli"))]
+#[inline]
+fn enable_brotli(builder: ClientBuilder) -> ClientBuilder {
+    builder
+}
+
 impl Client {
     pub fn new<S: ToString>(api_key: S) -> Self {
+        let client = ClientBuilder::new();
+        let client = enable_brotli(client);
         Self {
-            client: reqwest::Client::new(),
+            client: client.build().unwrap(),
             api_key: api_key.to_string(),
         }
     }

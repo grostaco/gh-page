@@ -6,7 +6,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use reqwest::{Client, StatusCode};
+use reqwest::{Client, ClientBuilder, StatusCode};
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::json;
 
@@ -51,13 +51,28 @@ pub struct Spotify {
     client: Client,
 }
 
+#[cfg(feature = "brotli")]
+#[inline]
+fn enable_brotli(builder: ClientBuilder) -> ClientBuilder {
+    builder.brotli(true).http2_prior_knowledge()
+}
+
+#[cfg(not(feature = "brotli"))]
+#[inline]
+fn enable_brotli(builder: ClientBuilder) -> ClientBuilder {
+    builder
+}
+
 impl Spotify {
     pub async fn new<P: AsRef<Path> + Into<PathBuf>>(path: P) -> Result<Self, SpotifyError> {
         let inner: Inner = serde_json::from_str(&read_to_string(&path).unwrap()).unwrap();
+        let client = ClientBuilder::new();
+        let client = enable_brotli(client);
+
         let mut spotify = Self {
             inner,
             path: path.into(),
-            client: Client::new(),
+            client: client.build().unwrap(),
         };
 
         spotify.refresh_token().await?;
