@@ -29,7 +29,7 @@ fn enable_brotli(builder: ClientBuilder) -> ClientBuilder {
 impl Client {
     pub fn new<S: ToString>(api_key: S) -> Self {
         let client = ClientBuilder::new();
-        let client = enable_brotli(client);
+        // let client = enable_brotli(client);
         Self {
             client: client.build().unwrap(),
             api_key: api_key.to_string(),

@@ -67,7 +67,6 @@ impl Spotify {
     pub async fn new<P: AsRef<Path> + Into<PathBuf>>(path: P) -> Result<Self, SpotifyError> {
         let inner: Inner = serde_json::from_str(&read_to_string(&path).unwrap()).unwrap();
         let client = ClientBuilder::new();
-        let client = enable_brotli(client);
 
         let mut spotify = Self {
             inner,
