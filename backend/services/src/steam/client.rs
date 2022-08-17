@@ -15,6 +15,7 @@ pub struct Client {
 }
 
 #[cfg(feature = "brotli")]
+#[allow(dead_code)]
 #[inline]
 fn enable_brotli(builder: ClientBuilder) -> ClientBuilder {
     builder.brotli(true).http2_prior_knowledge()
