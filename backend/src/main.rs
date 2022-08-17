@@ -25,9 +25,15 @@ async fn rocket() -> _ {
 
     // TODO: separate the api routes
     rocket::build()
-        .attach(AdHoc::on_response("Add cache control", |_req, resp| {
+        .attach(AdHoc::on_response("Add cache control", |req, resp| {
             Box::pin(async move {
-                resp.adjoin_header(Header::new("Cache-Control", "max-age=31536000"));
+                if req
+                    .route()
+                    .map(|route| route.uri.base() == "/")
+                    .unwrap_or(false)
+                {
+                    resp.adjoin_header(Header::new("Cache-Control", "max-age=31536000"));
+                }
             })
         }))
         .mount("/", FileServer::from("target/release/static/"))
