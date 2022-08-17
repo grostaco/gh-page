@@ -70,7 +70,7 @@ pub fn game_list() -> Html {
                                 { for data.iter().take(5).map(|(gameinfo, game)| {
                                     html! {
                                         <div class="flex-row justify-between" style="gap: 20px;">
-                                            <img alt="header image" src={gameinfo.header_image.clone()} style="width: 320px;"/>
+                                            <img alt="header image" src={gameinfo.header_image.clone()} width="320px" height="150px"/>
                                             <div class="flex-column">
                                                 <span style="margin-bottom: 5px;">
                                                 <p class="header-text game-title">{game.name.clone()}</p>
