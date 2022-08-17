@@ -96,7 +96,7 @@ pub fn game_list() -> Html {
                         {for owned_games.games.iter().map(|game|
                             html! {
                                 <div class="flex-row align-center" style="gap: 0.5rem; overflow: hidden">
-                                    <img alt="game icon preview" class="game-img-preview" src={format!("http://media.steampowered.com/steamcommunity/public/images/apps/{}/{}.jpg", game.appid, game.img_icon_url)}/>
+                                    <img width="32px" height="32px" alt="game icon preview" class="game-img-preview" src={format!("http://media.steampowered.com/steamcommunity/public/images/apps/{}/{}.jpg", game.appid, game.img_icon_url)}/>
                                     <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap">{game.name.clone()}</p>
                                     <div>{"·"}</div>
                                     <p style="white-space: nowrap">{format!("{:.1} hrs", game.playtime_forever as f64 / 60.)}</p>
