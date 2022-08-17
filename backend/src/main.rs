@@ -1,6 +1,8 @@
 use std::env;
 
-use rocket::{self, fs::FileServer, launch, routes, tokio::sync::Mutex};
+use rocket::{
+    self, fairing::AdHoc, fs::FileServer, http::Header, launch, routes, tokio::sync::Mutex,
+};
 use routes::{
     spotify::get_tracks,
     steam::{get_info, get_owned, get_recent},
@@ -23,6 +25,11 @@ async fn rocket() -> _ {
 
     // TODO: separate the api routes
     rocket::build()
+        .attach(AdHoc::on_request("Put Rewriter", |req, _| {
+            Box::pin(async move {
+                req.add_header(Header::new("Cache-Control", "max-age=31536000"));
+            })
+        }))
         .mount("/", FileServer::from("target/release/static/"))
         .mount(
             "/api/",
