@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use yew::{function_component, html, use_effect_with_deps, virtual_dom::VNode};
-use yew_hooks::use_async;
+use yew::{function_component, html, virtual_dom::VNode};
+use yew_hooks::{use_async_with_options, UseAsyncOptions};
 
 use services::spotify::chrono::DateTime;
 
@@ -9,18 +9,20 @@ use crate::services::spotify::get_tracks;
 
 #[function_component(SpotifyList)]
 pub fn spotify_list() -> Html {
-    let state = use_async(async move { get_tracks().await });
-    {
-        let state = state.clone();
-        let data = state.data.clone();
-        use_effect_with_deps(
-            move |_| {
-                state.run();
-                || ()
-            },
-            data,
-        );
-    }
+    let state = use_async_with_options(
+        async move { get_tracks().await },
+        UseAsyncOptions::enable_auto(),
+    );
+    // {
+    //     let state = state.clone();
+    //     use_effect_with_deps(
+    //         move |_| {
+    //             state.run();
+    //             || ()
+    //         },
+    //         (),
+    //     );
+    // }
 
     let mut groups: HashMap<String, (u64, Vec<VNode>)> = HashMap::new();
     if let Some(tracks) = &state.data {

@@ -1,5 +1,5 @@
-use yew::{function_component, html, use_effect_with_deps};
-use yew_hooks::use_async;
+use yew::{function_component, html};
+use yew_hooks::{use_async_with_options, UseAsyncOptions};
 
 use crate::{
     error::Error,
@@ -8,46 +8,53 @@ use crate::{
 
 #[function_component(GameList)]
 pub fn game_list() -> Html {
-    let state = use_async(async move {
-        async {
-            let recent_games = get_recent_games().await?;
-            let infos =
-                get_game_infos(recent_games.games.iter().map(|game| game.appid).collect()).await?;
+    let state = use_async_with_options(
+        async move {
+            async {
+                let recent_games = get_recent_games().await?;
+                let infos =
+                    get_game_infos(recent_games.games.iter().map(|game| game.appid).collect())
+                        .await?;
 
-            Ok::<_, Error>(
-                infos
-                    .into_iter()
-                    .zip(recent_games.games.into_iter())
-                    .collect::<Vec<_>>(),
-            )
-        }
-        .await
-    });
+                Ok::<_, Error>(
+                    infos
+                        .into_iter()
+                        .zip(recent_games.games.into_iter())
+                        .collect::<Vec<_>>(),
+                )
+            }
+            .await
+        },
+        UseAsyncOptions::enable_auto(),
+    );
 
-    let owned_games = use_async(async move { get_owned_games().await });
+    let owned_games = use_async_with_options(
+        async move { get_owned_games().await },
+        UseAsyncOptions::enable_auto(),
+    );
 
-    {
-        let state = state.clone();
-        let data = state.data.clone();
+    // {
+    //     let state = state.clone();
+    //     let data = state.data.clone();
 
-        use_effect_with_deps(
-            move |_| {
-                state.run();
-                || ()
-            },
-            data.clone(),
-        );
+    //     use_effect_with_deps(
+    //         move |_| {
+    //             state.run();
+    //             || ()
+    //         },
+    //         (),
+    //     );
 
-        let owned_games = owned_games.clone();
-        let data = owned_games.data.is_some();
-        use_effect_with_deps(
-            move |_| {
-                owned_games.run();
-                || ()
-            },
-            data,
-        )
-    }
+    //     let owned_games = owned_games.clone();
+    //     let data = owned_games.data.is_some();
+    //     use_effect_with_deps(
+    //         move |_| {
+    //             owned_games.run();
+    //             || ()
+    //         },
+    //         data,
+    //     )
+    // }
 
     html! {
         <div class="blog-container">
